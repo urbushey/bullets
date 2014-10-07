@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import unittest
 
 
@@ -26,6 +27,22 @@ class NewVisitorTest(unittest.TestCase):
         self.assertEqual(inputbox.get_attribute('placeholder'),
                          '+ This week I...'
                          )
+
+        # She types "Buy peacock feathers" into a text box (Edith's hobby
+        # is tying fly-fishing lures)
+        inputbox.send_keys('+ Uri saved the day.')
+
+        # When she hits enter, the page updates, and now the page lists
+        # "1: Buy peacock feathers" as an item in a to-do list table
+        inputbox.send_keys(Keys.ENTER)
+
+        table = self.browser.find_element_by_id('id_bullets_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+            any(row.text == '+ Uri saved the day' for row in rows),
+            "New bullet did not appear in bullets table"
+        )
+
 
         # Milton clicks a plus button to begin typing a bullet
         # Milton can choose whether this bullet is + or -
