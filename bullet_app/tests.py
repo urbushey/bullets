@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 
 from bullet_app.views import home_page
+from bullet_app.models import Bullet
 
 # Create your tests here.
 
@@ -23,7 +24,7 @@ class HomePageTest(TestCase):
     def test_home_page_can_save_a_POST_request(self):
         request = HttpRequest()
         request.method = 'POST'
-        request.POST['bullet_text'] = '+ A new bullet'
+        request.POST['bullet_text'] = 'A new bullet'
 
         response = home_page(request)
 
@@ -32,3 +33,22 @@ class HomePageTest(TestCase):
                                          {'new_bullet_text': 'A new bullet'}
                                          )
         self.assertEqual(response.content.decode(), expected_html)
+
+    def test_saving_and_retrieving_bullets(self):
+        first_bullet = Bullet()
+        first_bullet.text = 'The first (ever) bullet. Bang!'
+        first_bullet.save()
+
+        second_bullet = Bullet()
+        second_bullet.text = 'Second bullet'
+        second_bullet.save()
+
+        saved_bullets = Bullet.objects.all()
+        self.assertEqual(saved_bullets.count(), 2)
+
+        first_saved_bullet = saved_bullets[0]
+        second_saved_bullet = saved_bullets[1]
+        self.assertEqual(first_saved_bullet.text,
+                         'The first (ever) bullet. Bang!')
+        self.assertEqual(second_saved_bullet.text,
+                         'Second bullet')
