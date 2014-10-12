@@ -1,9 +1,9 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -20,7 +20,7 @@ class NewVisitorTest(unittest.TestCase):
     def test_can_start_bullet_and_retrieve_later(self):
         # It is Friday, time for bullets.
         # Milton wants to use our app instead of email. He goes to the homepage
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # Milton first visits the site and sees no bullets.
         self.assertIn('Friday Bullets', self.browser.title)
@@ -67,6 +67,3 @@ class NewVisitorTest(unittest.TestCase):
     # Milton can embed a picture in his bullet
     # Bereket can email a link to Milton's bullet
     # Milton can sign into the site using his LDAP password (OY)
-
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
