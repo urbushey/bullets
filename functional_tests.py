@@ -28,23 +28,16 @@ class NewVisitorTest(unittest.TestCase):
                          '+ This week I...'
                          )
 
-        # She types "Buy peacock feathers" into a text box (Edith's hobby
-        # is tying fly-fishing lures)
-        inputbox.send_keys('+ Uri saved the day.')
+        # Milton wants to give Uri credit.
+        inputbox.send_keys('Uri saved the day.')
 
-        # When she hits enter, the page updates, and now the page lists
-        # "1: Buy peacock feathers" as an item in a to-do list table
+        # Milton hits enter, and now the new bullet appears in the table.
         inputbox.send_keys(Keys.ENTER)
 
         table = self.browser.find_element_by_id('id_bullets_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '+ Uri saved the day' for row in rows),
-            "New bullet did not appear in bullets table"
-        )
+        self.assertIn('+ Uri saved the day.', [row.text for row in rows])
 
-
-        # Milton clicks a plus button to begin typing a bullet
         # Milton can choose whether this bullet is + or -
         # Milton can enter the bullet and press enter and it is saved
         # Milton can come back to the site and see his bullets
