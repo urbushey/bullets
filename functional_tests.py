@@ -38,6 +38,17 @@ class NewVisitorTest(unittest.TestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn('+ Uri saved the day.', [row.text for row in rows])
 
+        # Milton wants to give Bereket some credit too by entering a second
+        # item.
+        inputbox = self.browser.find_element_by_id('id_new_bullet')
+        inputbox.send_keys('Bereket committed some sick code too.')
+        inputbox.send_keys(Keys.ENTER)
+
+        table = self.browser.find_element_by_id('id_bullets_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('+ Bereket committed some sick code too.',
+                      [row.text for row in rows])
+
         # Milton can choose whether this bullet is + or -
         # Milton can enter the bullet and press enter and it is saved
         # Milton can come back to the site and see his bullets
