@@ -1,11 +1,14 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-
+from django.shortcuts import redirect, render
+from bullet_app.models import Bullet
 # Create your views here.
 
 
 def home_page(request):
-    return render(request, 'home.html', {
-                  # Return '' if bullet_text does not exist.
-                  'new_bullet_text': request.POST.get('bullet_text', '')
-                  })
+    if request.method == 'POST':
+        Bullet.objects.create(text=request.POST['bullet_text'])
+        return redirect('/')
+
+    bullets = Bullet.objects.all()
+    return render(request,
+                  'home.html',
+                  {'bullets': bullets})
