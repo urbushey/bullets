@@ -12,6 +12,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_list_table_for_row(self, value):
+        table = self.browser.find_element_by_id('id_bullets_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(value, [row.text for row in rows])
+
     def test_can_start_bullet_and_retrieve_later(self):
         # It is Friday, time for bullets.
         # Milton wants to use our app instead of email. He goes to the homepage
@@ -34,20 +39,14 @@ class NewVisitorTest(unittest.TestCase):
         # Milton hits enter, and now the new bullet appears in the table.
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_id('id_bullets_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('+ Uri saved the day.', [row.text for row in rows])
-
         # Milton wants to give Bereket some credit too by entering a second
         # item.
         inputbox = self.browser.find_element_by_id('id_new_bullet')
         inputbox.send_keys('Bereket committed some sick code too.')
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_id('id_bullets_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('+ Bereket committed some sick code too.',
-                      [row.text for row in rows])
+        self.check_list_table_for_row('+ Uri saved the day.')
+        self.check_list_table_for_row('+ Bereket committed some sick code too.')
 
         # Milton can choose whether this bullet is + or -
         # Milton can enter the bullet and press enter and it is saved
