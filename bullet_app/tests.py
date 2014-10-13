@@ -21,29 +21,6 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_home_page_can_save_a_POST_request(self):
-        #TODO this test is getting long
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['bullet_text'] = 'A new bullet'
-
-        response = home_page(request)
-
-        # Test that it actually saves to DB
-        #self.assertEqual(Bullet.objects.count(), 1)
-        new_bullet = Bullet.objects.first()
-        self.assertEqual(new_bullet.text, 'A new bullet')
-
-    def test_home_page_redirects_after_POST(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['bullet_text'] = 'A new bullet'
-
-        response = home_page(request)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
-
     def test_saving_and_retrieving_bullets(self):
         first_bullet = Bullet()
         first_bullet.text = 'The first (ever) bullet. Bang!'
@@ -63,16 +40,37 @@ class HomePageTest(TestCase):
         self.assertEqual(second_saved_bullet.text,
                          'Second bullet')
 
-    def test_home_page_only_saves_items_when_necessary(self):
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(Bullet.objects.count(), 0)
 
-    def test_home_page_displays_all_bullets(self):
+class BulletsViewTest(TestCase):
+
+    def test_uses_bullets_template(self):
+        response = self.client.get('/bullets/the-only-bullets-in-the-world/')
+        self.assertTemplateUsed(response, 'bullets.html')
+
+    def test_displays_all_bullets(self):
         Bullet.objects.create(text='bullet 1')
         Bullet.objects.create(text='bullet 2')
 
-        request = HttpRequest()
-        response = home_page(request)
-        self.assertIn('bullet 1', response.content.decode())
-        self.assertIn('bullet 2', response.content.decode())
+        response = self.client.get('/bullets/the-only-bullets-in-the-world/')
+        self.assertContains(response, 'bullet 1')
+        self.assertContains(response, 'bullet 2')
+
+class NewBulletsTest(TestCase):
+
+    def test_saving_a_POST_request(self):
+        self.client.post(
+            '/bullets/new',
+            data={'bullet_text': 'A new bullet'}
+            )
+        self.assertEqual(Bullet.objects.count(), 1)
+        new_bullet = Bullet.objects.first()
+        self.assertEqual(new_bullet.text, 'A new bullet')
+
+    def test_redirects_after_POST(self):
+        response = self.client.post(
+            '/bullets/new',
+            data={'bullet_text': 'A new bullet'}
+            )
+
+        self.assertRedirects(response,
+                             '/bullets/the-only-bullets-in-the-world/')

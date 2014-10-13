@@ -7,5 +7,11 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     # url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', 'bullet_app.views.home_page', name='home')
+    url(r'^$', 'bullet_app.views.home_page', name='home'),
+    url(r'^bullets/the-only-bullets-in-the-world/$',
+        'bullet_app.views.view_bullets',
+        name='view_bullets'),
+    url(r'^bullets/new$',
+        'bullet_app.views.new_bullet',
+        name='new_list'),
 )

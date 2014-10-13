@@ -4,11 +4,18 @@ from bullet_app.models import Bullet
 
 
 def home_page(request):
-    if request.method == 'POST':
-        Bullet.objects.create(text=request.POST['bullet_text'])
-        return redirect('/')
+    return render(request,
+                  'home.html'
+                  )
 
+
+def view_bullets(request):
     bullets = Bullet.objects.all()
     return render(request,
-                  'home.html',
+                  'bullets.html',
                   {'bullets': bullets})
+
+
+def new_bullet(request):
+    Bullet.objects.create(text=request.POST['bullet_text'])
+    return redirect('/bullets/the-only-bullets-in-the-world/')
