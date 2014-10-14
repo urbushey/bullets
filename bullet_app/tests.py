@@ -25,17 +25,24 @@ class HomePageTest(TestCase):
 class BulletsViewTest(TestCase):
 
     def test_uses_bullets_template(self):
-        response = self.client.get('/bullets/the-only-bullets-in-the-world/')
+        bg = BulletGroup.objects.create()
+        response = self.client.get('/bullets/%d/' % (bg.id,))
         self.assertTemplateUsed(response, 'bullets.html')
 
-    def test_displays_all_bullets(self):
-        bullet_group_ = BulletGroup.objects.create()
-        Bullet.objects.create(text='bullet 1', bullet_group=bullet_group_)
-        Bullet.objects.create(text='bullet 2', bullet_group=bullet_group_)
+    def test_displays_only_bullets_in_bullet_group(self):
+        correct_bg = BulletGroup.objects.create()
+        Bullet.objects.create(text='bullet 1', bullet_group=correct_bg)
+        Bullet.objects.create(text='bullet 2', bullet_group=correct_bg)
+        other_bg = BulletGroup.objects.create()
+        Bullet.objects.create(text='other bullet 1', bullet_group=other_bg)
+        Bullet.objects.create(text='other bullet 2', bullet_group=other_bg)
 
-        response = self.client.get('/bullets/the-only-bullets-in-the-world/')
+        response = self.client.get('/bullets/%d/' % (correct_bg.id,))
+
         self.assertContains(response, 'bullet 1')
         self.assertContains(response, 'bullet 2')
+        self.assertNotContains(response, 'other bullet 1')
+        self.assertNotContains(response, 'other bullet 2')
 
 class NewBulletsTest(TestCase):
 
@@ -53,9 +60,46 @@ class NewBulletsTest(TestCase):
             '/bullets/new',
             data={'bullet_text': 'A new bullet'}
             )
+        bullet_group = BulletGroup.objects.first()
+        self.assertRedirects(response,
+                             '/bullets/%d/' % (bullet_group.id))
+
+    def test_can_save_a_POST_request_to_existing_bullet_group(self):
+        other_bullet_group = BulletGroup.objects.create()
+        correct_bullet_group = BulletGroup.objects.create()
+
+        self.client.post(
+            '/bullets/%d/add_bullet' % (correct_bullet_group.id,),
+            data={'bullet_text': 'A new bullet for an existing bullet_group'}
+            )
+
+        self.assertEqual(Bullet.objects.count(), 1)
+        new_bullet = Bullet.objects.first()
+        self.assertEqual(new_bullet.text,
+                         'A new bullet for an existing bullet_group')
+        self.assertEqual(new_bullet.bullet_group, correct_bullet_group)
+        self.assertNotEqual(new_bullet.bullet_group, other_bullet_group)
+
+    def test_redirects_after_POST_to_existing_bullet_group(self):
+        other_bullet_group = BulletGroup.objects.create()
+        correct_bullet_group = BulletGroup.objects.create()
+
+        response = self.client.post(
+            '/bullets/%d/add_bullet' % (correct_bullet_group.id,),
+            data={'bullet_text': 'A new bullet for an existing bullet_group'}
+            )
 
         self.assertRedirects(response,
-                             '/bullets/the-only-bullets-in-the-world/')
+                             '/bullets/%d/' % (correct_bullet_group.id,)
+                             )
+
+    def test_passes_correct_bullet_group_to_template(self):
+        other_bullet_group = BulletGroup.objects.create()
+        correct_bullet_group = BulletGroup.objects.create()
+        response = self.client.get('/bullets/%d/' % (correct_bullet_group.id,))
+        self.assertEqual(response.context['bullet_group'],
+                         correct_bullet_group
+                         )
 
 class BulletAndBulletGroupModelsTest(TestCase):
     def test_saving_and_retrieving_bullets(self):

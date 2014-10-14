@@ -4,12 +4,12 @@
     </head>
     <body>
         <h1>Your Friday Bullets</h1>
-        <form method="POST" action="/bullets/new">
+        <form method="POST" action="/bullets/{{ bullet_group.id }}/add_bullet">
             <input name="bullet_text" id="id_new_bullet" placeholder="+ This week I...">
             {% csrf_token %}
         </form>
         <table id="id_bullets_table">
-            {% for bullet in bullets %}
+            {% for bullet in bullet_group.bullet_set.all %}
             <tr><td>+ {{ bullet.text }}</td></tr>
             {% endfor %}
         </table>

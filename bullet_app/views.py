@@ -9,15 +9,20 @@ def home_page(request):
                   )
 
 
-def view_bullets(request):
-    bullets = Bullet.objects.all()
+def view_bullets(request, bullet_group_id):
+    bg = BulletGroup.objects.get(id=bullet_group_id)
     return render(request,
                   'bullets.html',
-                  {'bullets': bullets})
-
+                  {'bullet_group': bg})
 
 def new_bullet(request):
     bg = BulletGroup.objects.create()
     Bullet.objects.create(text=request.POST['bullet_text'],
                           bullet_group=bg)
-    return redirect('/bullets/the-only-bullets-in-the-world/')
+    return redirect('/bullets/%d/' % (bg.id,))
+
+def add_bullet(request, bullet_group_id):
+    bg = BulletGroup.objects.get(id=bullet_group_id)
+    Bullet.objects.create(text=request.POST['bullet_text'],
+                          bullet_group=bg)
+    return redirect('/bullets/%d/' % (bg.id,))

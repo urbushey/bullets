@@ -76,7 +76,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotEqual(bereket_bullets_url, milton_bullets_url)
 
         # Again, make sure Bereket doesn't see Milton's bullets
-        page_text = self.browser.find_element_by_tag_name('body')
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Uri saved the day', page_text)
         self.assertIn('Had a bad day', page_text)
 
