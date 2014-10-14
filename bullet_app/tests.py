@@ -44,7 +44,7 @@ class BulletsViewTest(TestCase):
         self.assertNotContains(response, 'other bullet 1')
         self.assertNotContains(response, 'other bullet 2')
 
-class NewBulletsTest(TestCase):
+class NewBulletGroupTest(TestCase):
 
     def test_saving_a_POST_request(self):
         self.client.post(

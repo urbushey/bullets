@@ -15,7 +15,7 @@ def view_bullets(request, bullet_group_id):
                   'bullets.html',
                   {'bullet_group': bg})
 
-def new_bullet(request):
+def new_bullet_group(request):
     bg = BulletGroup.objects.create()
     Bullet.objects.create(text=request.POST['bullet_text'],
                           bullet_group=bg)
