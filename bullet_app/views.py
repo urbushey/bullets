@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from bullet_app.models import Bullet
+from bullet_app.models import Bullet, BulletGroup
 # Create your views here.
 
 
@@ -17,5 +17,7 @@ def view_bullets(request):
 
 
 def new_bullet(request):
-    Bullet.objects.create(text=request.POST['bullet_text'])
+    bg = BulletGroup.objects.create()
+    Bullet.objects.create(text=request.POST['bullet_text'],
+                          bullet_group=bg)
     return redirect('/bullets/the-only-bullets-in-the-world/')
