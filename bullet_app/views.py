@@ -15,11 +15,13 @@ def view_bullets(request, bullet_group_id):
                   'bullets.html',
                   {'bullet_group': bg})
 
+
 def new_bullet_group(request):
     bg = BulletGroup.objects.create()
     Bullet.objects.create(text=request.POST['bullet_text'],
                           bullet_group=bg)
     return redirect('/bullets/%d/' % (bg.id,))
+
 
 def add_bullet(request, bullet_group_id):
     bg = BulletGroup.objects.get(id=bullet_group_id)
