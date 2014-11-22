@@ -80,15 +80,27 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('Uri saved the day', page_text)
         self.assertIn('Had a bad day', page_text)
 
-        self.fail("Finish writing the test!")
+        # Milton comes back and wants to enter a bullet that is negative
+        ## New web browser session
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+        self.browser.get(self.live_server_url)
+        bullet_dropdown = \
+            self.browser.find_element_by_id('id_new_bullet_dropdown')
+        for option in bullet_dropdown.find_elements_by_tag_name('option'):
+            if option.text == "-":
+                option.click()
+                break
 
-        # Milton can choose whether this bullet is + or -
+        # Retrieve the bullet and make sure it has a negative value
+
+
         # Milton can enter the bullet and press enter and it is saved
         # Milton can come back to the site and see his bullets
-    # Bereket can come to the site and see Milton's bullet
-    # Bereket can post his own bullet
-    # Bereket can see Milton's bullet and his own bullet on the site
-    # Bereket can collapse his bullet or Milton's bullet
+        # Bereket can come to the site and see Milton's bullet
+        # Bereket can post his own bullet
+        # Bereket can see Milton's bullet and his own bullet on the site
+        # Bereket can collapse his bullet or Milton's bullet
     # Bereket can post a comment on Milton's bullet
     # Milton can see the comment posted on his bullet by Bereket
     # Bereket can see the bullets sorted by date
@@ -99,3 +111,4 @@ class NewVisitorTest(LiveServerTestCase):
     # Milton can embed a picture in his bullet
     # Bereket can email a link to Milton's bullet
     # Milton can sign into the site using his LDAP password (OY)
+        self.fail("Finish writing the test!")
