@@ -21,6 +21,17 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
+    def test_can_select_bullet_sign_and_save(self):
+        response = self.client.post(
+            '/bullets/new',
+            data={'bullet_text': 'A negative bullet',
+                  'bullet_sign': '-'
+                 }
+            )
+        # follow the redirect
+        self.assertContains(self.client.get(response.url),
+                            '- A negative bullet')
+
 
 class BulletsViewTest(TestCase):
 
@@ -62,7 +73,8 @@ class NewBulletGroupTest(TestCase):
     def test_saving_a_POST_request(self):
         self.client.post(
             '/bullets/new',
-            data={'bullet_text': 'A new bullet'}
+            data={'bullet_text': 'A new bullet',
+                  'bullet_sign': '+'}
             )
         self.assertEqual(Bullet.objects.count(), 1)
         new_bullet = Bullet.objects.first()
@@ -71,7 +83,8 @@ class NewBulletGroupTest(TestCase):
     def test_redirects_after_POST(self):
         response = self.client.post(
             '/bullets/new',
-            data={'bullet_text': 'A new bullet'}
+            data={'bullet_text': 'A new bullet',
+                  'bullet_sign': '+'}
             )
         bullet_group = BulletGroup.objects.first()
         self.assertRedirects(response,
@@ -83,7 +96,8 @@ class NewBulletGroupTest(TestCase):
 
         self.client.post(
             '/bullets/%d/add_bullet' % (correct_bullet_group.id,),
-            data={'bullet_text': 'A new bullet for an existing bullet_group'}
+            data={'bullet_text': 'A new bullet for an existing bullet_group',
+                  'bullet_sign': '+'}
             )
 
         self.assertEqual(Bullet.objects.count(), 1)
@@ -99,7 +113,8 @@ class NewBulletGroupTest(TestCase):
 
         response = self.client.post(
             '/bullets/%d/add_bullet' % (correct_bullet_group.id,),
-            data={'bullet_text': 'A new bullet for an existing bullet_group'}
+            data={'bullet_text': 'A new bullet for an existing bullet_group',
+                  'bullet_sign': '+'}
             )
 
         self.assertRedirects(response,

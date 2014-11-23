@@ -5,6 +5,10 @@
     <body>
         <h1>Your Friday Bullets</h1>
         <form method="POST" action="/bullets/new">
+            <select name="bullet_sign" id="id_new_bullet_dropdown">
+                <option value="+">+</option>
+                <option value="-">-</option>
+            </select>
             <input name="bullet_text" id="id_new_bullet" placeholder="+ This week I...">
             {% csrf_token %}
         </form>
