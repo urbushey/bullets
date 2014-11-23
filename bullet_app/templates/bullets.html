@@ -10,7 +10,7 @@
         </form>
         <table id="id_bullets_table">
             {% for bullet in bullet_group.bullet_set.all %}
-            <tr><td>+ {{ bullet.text }}</td></tr>
+            <tr><td>{{ bullet.sign }} {{ bullet.text }}</td></tr>
             {% endfor %}
         </table>
     </body>

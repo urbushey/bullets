@@ -44,6 +44,19 @@ class BulletsViewTest(TestCase):
         self.assertNotContains(response, 'other bullet 1')
         self.assertNotContains(response, 'other bullet 2')
 
+    def test_displays_bullet_sign(self):
+        bg = BulletGroup.objects.create()
+        Bullet.objects.create(text='positive bullet',
+                              bullet_group=bg,
+                              sign='+')
+        Bullet.objects.create(text='negative bullet',
+                              bullet_group=bg,
+                              sign='-')
+
+        response = self.client.get('/bullets/%d/' % (bg.id,))
+        self.assertContains(response, '+ positive bullet')
+        self.assertContains(response, '- negative bullet')
+
 class NewBulletGroupTest(TestCase):
 
     def test_saving_a_POST_request(self):
