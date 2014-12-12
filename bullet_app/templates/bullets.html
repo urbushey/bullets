@@ -1,21 +1,12 @@
-<html>
-    <head>
-        <title>Friday Bullets</title>
-    </head>
-    <body>
-        <h1>Your Friday Bullets</h1>
-        <form method="POST" action="/bullets/{{ bullet_group.id }}/add_bullet">
-            <select name="bullet_sign" id="id_new_bullet_dropdown">
-                <option value="+">+</option>
-                <option value="-">-</option>
-            </select>
-            <input name="bullet_text" id="id_new_bullet" placeholder="+ This week I...">
-            {% csrf_token %}
-        </form>
+{% extends 'base.html' %}
+
+{% block header_text %}Your Friday Bullets {% endblock %}
+
+{% block form_action %}/bullets/{{ bullet_group.id }}/add_bullet{% endblock %}
+
+{% block table %}
         <table id="id_bullets_table">
             {% for bullet in bullet_group.bullet_set.all %}
             <tr><td>{{ bullet.sign }} {{ bullet.text }}</td></tr>
             {% endfor %}
-        </table>
-    </body>
-</html>
+{% endblock %}

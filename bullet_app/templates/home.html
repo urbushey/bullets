@@ -1,16 +1,5 @@
-<html>
-    <head>
-        <title>Friday Bullets</title>
-    </head>
-    <body>
-        <h1>Your Friday Bullets</h1>
-        <form method="POST" action="/bullets/new">
-            <select name="bullet_sign" id="id_new_bullet_dropdown">
-                <option value="+">+</option>
-                <option value="-">-</option>
-            </select>
-            <input name="bullet_text" id="id_new_bullet" placeholder="+ This week I...">
-            {% csrf_token %}
-        </form>
-    </body>
-</html>
+{% extends 'base.html' %}
+
+{% block header_text %}Your Friday Bullets {% endblock %}
+
+{% block form_action %}/bullets/new{% endblock %}
