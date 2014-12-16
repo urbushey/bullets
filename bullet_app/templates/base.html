@@ -1,18 +1,35 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
     <head>
         <title>Friday Bullets</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     </head>
     <body>
-        <h1>{% block header_text %}{% endblock %}</h1>
-        <form method="POST" action="{% block form_action %}{%endblock%}">
-            <select name="bullet_sign" id="id_new_bullet_dropdown">
-                <option value="+">+</option>
-                <option value="-">-</option>
-            </select>
-            <input name="bullet_text" id="id_new_bullet" placeholder="+ This week I...">
-            {% csrf_token %}
-        </form>
-        {% block table %}
-        {% endblock %}
+        <div class="container">
+
+            <div class="row"
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="text-center">
+                        <h1>{% block header_text %}{% endblock %}</h1>
+                        <form method="POST" action="{% block form_action %}{%endblock%}">
+                            <select name="bullet_sign" id="id_new_bullet_dropdown">
+                                <option value="+">+</option>
+                                <option value="-">-</option>
+                            </select>
+                            <input name="bullet_text" id="id_new_bullet" placeholder="+ This week I...">
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        {% block table %}
+                        {% endblock %}
+                </div>
+            </div>
+        </div>
     </body>
 </html>
