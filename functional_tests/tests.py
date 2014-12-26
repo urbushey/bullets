@@ -1,9 +1,23 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
+import sys
 
 class NewVisitorTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.server_url == cls.live_server_url:
+            super().tearDownClass()
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -20,7 +34,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def test_can_start_bullet_and_retrieve_later(self):
         # It is Friday, time for bullets.
         # Milton wants to use our app instead of email. He goes to the homepage
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
 
         # Milton first visits the site and sees no bullets.
         self.assertIn('Friday Bullets', self.browser.title)
@@ -59,7 +73,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # Bereket visits home page. Does not see anyone else's bullets
         ## This is because I am following along with the TDD python book
         ## Normally we want him to see other people's bullets
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Uri saved the day', page_text)
         self.assertNotIn('Bereket committed some sick code', page_text)
@@ -84,7 +98,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         ## New web browser session
         self.browser.quit()
         self.browser = webdriver.Firefox()
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         bullet_dropdown = \
             self.browser.find_element_by_id('id_new_bullet_dropdown')
         for option in bullet_dropdown.find_elements_by_tag_name('option'):
