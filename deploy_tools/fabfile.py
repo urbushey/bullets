@@ -31,7 +31,7 @@ def _get_latest_source(source_folder):
 
 
 def _update_settings(source_folder, site_name):
-    settings_path = source_folder + '/superlists/settings.py'
+    settings_path = source_folder + '/bullets/settings.py'
     sed(settings_path, "DEBUG = True", "DEBUG = False")  # 1
     sed(settings_path,
         'ALLOWED_HOSTS =.+$',
@@ -39,7 +39,7 @@ def _update_settings(source_folder, site_name):
         # TODO it is likely that this needs to be
         # replaced with my server name instead of my site_name.
         )
-    secret_key_file = source_folder + '/superlists/secret_key.py'
+    secret_key_file = source_folder + '/bullets/secret_key.py'
     if not exists(secret_key_file):  # 3
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
         key = ''.join(random.SystemRandom().choice(chars) for _ in range(50))
