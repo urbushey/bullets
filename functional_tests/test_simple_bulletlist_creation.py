@@ -1,35 +1,9 @@
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import sys
 
-class NewVisitorTest(StaticLiveServerTestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.server_url == cls.live_server_url:
-            super().tearDownClass()
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def check_list_table_for_row(self, value):
-        table = self.browser.find_element_by_id('id_bullets_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(value, [row.text for row in rows])
+class NewVisitorTest(FunctionalTest):
 
     def test_can_start_bullet_and_retrieve_later(self):
         # It is Friday, time for bullets.
@@ -105,47 +79,3 @@ class NewVisitorTest(StaticLiveServerTestCase):
             if option.text == "-":
                 option.click()
                 break
-
-    def test_layout_and_styling(self):
-        # Bereket goes to the homepage
-        self.browser.get(self.server_url)
-        self.browser.set_window_size(1024, 768)
-
-        # she notices the input box is neatly centered
-        inputbox = self.browser.find_element_by_id('id_new_bullet')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=25)  # I am not following the book exactly but I want
-                       # this test to pass even with the +/- dropdown
-
-        # she sees the same thing when she submits input
-        inputbox.send_keys('testing\n')
-        inputbox = self.browser.find_element_by_id('id_new_bullet')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=25)  # I am not following the book exactly but I want
-                       # this test to pass even with the +/- dropdown
-
-
-        # Retrieve the bullet and make sure it has a negative value
-
-
-        # Milton can enter the bullet and press enter and it is saved
-        # Milton can come back to the site and see his bullets
-        # Bereket can come to the site and see Milton's bullet
-        # Bereket can post his own bullet
-        # Bereket can see Milton's bullet and his own bullet on the site
-        # Bereket can collapse his bullet or Milton's bullet
-    # Bereket can post a comment on Milton's bullet
-    # Milton can see the comment posted on his bullet by Bereket
-    # Bereket can see the bullets sorted by date
-    # Bereket can see the bullets sorted by user
-    # Bereket can see the bullets sorted by (team?)
-    # Milton can embed rich text in his bullet
-    # Milton can embed links in his bullet
-    # Milton can embed a picture in his bullet
-    # Bereket can email a link to Milton's bullet
-    # Milton can sign into the site using his LDAP password (OY)
-        self.fail("Finish writing the test!")
