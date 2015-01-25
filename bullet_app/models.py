@@ -9,7 +9,7 @@ class BulletGroup(models.Model):
 
 class Bullet(models.Model):
 
-    text = models.TextField(default='')
+    text = models.TextField(blank=False)
     bullet_group = models.ForeignKey(BulletGroup, default=None)
     # Constants for sign option
     POS = '+'

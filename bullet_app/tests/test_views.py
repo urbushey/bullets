@@ -1,4 +1,5 @@
 from django.core.urlresolvers import resolve
+from django.utils.html import escape
 from django.test import TestCase
 from django.http import HttpRequest
 from django.template.loader import render_to_string
@@ -128,3 +129,13 @@ class NewBulletGroupTest(TestCase):
         self.assertEqual(response.context['bullet_group'],
                          correct_bullet_group
                          )
+
+    def test_validation_errors_are_sent_to_template(self):
+
+        response = self.client.post('/bullets/new',
+                                    data={'bullet_text': '',
+                                          'bullet_sign': '+'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
+        expected_error = escape("You can't have an empty bullet")
+        self.assertContains(response, expected_error)

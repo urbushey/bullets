@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 from bullet_app.models import Bullet, BulletGroup
 
 # Create your tests here.
@@ -39,3 +40,11 @@ class BulletAndBulletGroupModelsTest(TestCase):
         self.assertEqual(second_saved_bullet.sign,
                          '-')
         self.assertEqual(second_saved_bullet.bullet_group, bullet_group_)
+
+    def test_cannot_save_empty_bullets(self):
+        bullet_group_ = BulletGroup.objects.create()
+        bullet = Bullet(bullet_group=bullet_group_,
+                        text='')
+        with self.assertRaises(ValidationError):
+            bullet.save()
+            bullet.full_clean()
