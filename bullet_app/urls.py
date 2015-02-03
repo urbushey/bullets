@@ -9,7 +9,6 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'bullet_app.views.home_page', name='home'),
     url(r'^(\d+)/$', 'bullet_app.views.view_bullets', name='view_bullets'),
-    url(r'^(\d+)/add_bullet$', 'bullet_app.views.add_bullet', name='add_bullet'),
     url(r'^new$', 'bullet_app.views.new_bullet_group',name='new_bullet_group'),
 
 )

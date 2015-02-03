@@ -96,7 +96,7 @@ class NewBulletGroupTest(TestCase):
         correct_bullet_group = BulletGroup.objects.create()
 
         self.client.post(
-            '/bullets/%d/add_bullet' % (correct_bullet_group.id,),
+            '/bullets/%d/' % (correct_bullet_group.id,),
             data={'bullet_text': 'A new bullet for an existing bullet_group',
                   'bullet_sign': '+'}
             )
@@ -113,7 +113,7 @@ class NewBulletGroupTest(TestCase):
         correct_bullet_group = BulletGroup.objects.create()
 
         response = self.client.post(
-            '/bullets/%d/add_bullet' % (correct_bullet_group.id,),
+            '/bullets/%d/' % (correct_bullet_group.id,),
             data={'bullet_text': 'A new bullet for an existing bullet_group',
                   'bullet_sign': '+'}
             )
@@ -139,3 +139,11 @@ class NewBulletGroupTest(TestCase):
         self.assertTemplateUsed(response, 'home.html')
         expected_error = escape("You can't have an empty bullet")
         self.assertContains(response, expected_error)
+
+    def test_invalid_items_are_not_saved(self):
+        self.client.post('bullets/new',
+                         data={'bullet_text': '',
+                               'bullet_sign': '+'})
+
+        self.assertEqual(BulletGroup.objects.count(), 0)
+        self.assertEqual(Bullet.objects.count(), 0)

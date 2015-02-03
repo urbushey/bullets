@@ -28,7 +28,6 @@ class LayoutAndStylingTest(FunctionalTest):
 
 class ItemValidationTest(FunctionalTest):
 
-    @skip
     def test_cannot_add_empty_list_items(self):
 
         # Milton goes to the home page and accidentally tries to submit
