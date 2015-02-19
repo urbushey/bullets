@@ -70,12 +70,11 @@ class BulletsViewTest(TestCase):
         self.assertContains(response, '+ positive bullet')
         self.assertContains(response, '- negative bullet')
 
-    @skip
     def test_validation_errors_end_up_on_bullets_page(self):
         bg_ = BulletGroup.objects.create()
         response = self.client.post(
             '/bullets/%d/' % (bg_.id,),
-            data={'bullet_text': 'A new bullet',
+            data={'bullet_text': '',
                   'bullet_sign': '+'}
             )
         self.assertEqual(response.status_code, 200)
