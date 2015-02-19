@@ -21,7 +21,7 @@ def view_bullets(request, bullet_group_id):
                             bullet_group=bg_)
             bullet.full_clean()
             bullet.save()
-            return redirect('/bullets/%d/' % (bg_.id,))
+            return redirect(bg_)
         except ValidationError:
             error = "You can't have an empty bullet"
 
@@ -32,13 +32,13 @@ def view_bullets(request, bullet_group_id):
 
 
 def new_bullet_group(request):
-    bg = BulletGroup.objects.create()
+    bg_ = BulletGroup.objects.create()
     bullet = Bullet.objects.create(text=request.POST['bullet_text'],
                                    sign=request.POST['bullet_sign'],
-                                   bullet_group=bg)
+                                   bullet_group=bg_)
     try:
         bullet.full_clean()
     except ValidationError:
         error = "You can't have an empty bullet"
         return render(request, 'home.html', {"error": error})
-    return redirect('/bullets/%d/' % (bg.id,))
+    return redirect(bg_)

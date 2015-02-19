@@ -48,3 +48,7 @@ class BulletAndBulletGroupModelsTest(TestCase):
         with self.assertRaises(ValidationError):
             bullet.save()
             bullet.full_clean()
+
+    def test_get_absolute_url(self):
+        bg_ = BulletGroup.objects.create()
+        self.assertEqual(bg_.get_absolute_url(), '/bullets/%d/' % (bg_.id,))
