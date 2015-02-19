@@ -3,6 +3,7 @@ from django.utils.html import escape
 from django.test import TestCase
 from django.http import HttpRequest
 from django.template.loader import render_to_string
+from unittest import skip
 
 from bullet_app.views import home_page
 from bullet_app.models import Bullet, BulletGroup
@@ -68,6 +69,20 @@ class BulletsViewTest(TestCase):
         response = self.client.get('/bullets/%d/' % (bg.id,))
         self.assertContains(response, '+ positive bullet')
         self.assertContains(response, '- negative bullet')
+
+    @skip
+    def test_validation_errors_end_up_on_bullets_page(self):
+        bg_ = BulletGroup.objects.create()
+        response = self.client.post(
+            '/bullets/%d/' % (bg_.id,),
+            data={'bullet_text': 'A new bullet',
+                  'bullet_sign': '+'}
+            )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'bullets.html')
+        expected_error = escape("You can't have an empty bullet")
+        self.assertContains(response, expected_error)
+
 
 class NewBulletGroupTest(TestCase):
 
