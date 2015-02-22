@@ -30,3 +30,8 @@ class FunctionalTest(StaticLiveServerTestCase):
         table = self.browser.find_element_by_id('id_bullets_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(value, [row.text for row in rows])
+
+    def get_bullets_table(self):
+        table = self.browser.find_element_by_id('id_bullets_table')
+        rows = table.find_elements_by_tag_name('tr')
+        return rows
