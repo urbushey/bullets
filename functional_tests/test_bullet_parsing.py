@@ -12,15 +12,13 @@ class BulletParsingTest(FunctionalTest):
                                         '+ This is good]\n')
         row = self.get_bullets_table()[0]
         self.assertIn('This is good', row.text)
-        self.assertEqual(row.positive_score, 1)
-        self.assertEqual(row.negative_score, 0)
+        self.assertEqual(row.sign, '+')
         # Uri wants to add a new bullet. He wants this one to be negative.
         self.browser.find_element_by_id('id_new_bullet').send_keys(
                                         '- This is bad\n')
         row = self.get_bullets_table()[1]
         self.assertIn('This is bad', row.text)
-        self.assertEqual(row.positive_score, 0)
-        self.assertEqual(row.negative_score, 1)
+        self.assertEqual(row.sign, '-')
         # # Uri wants to add a bullet that has 3 positives.
         # self.browser.find_element_by_id('id_new_bullet').send_keys(
         #                                 '+++ Triple good!\n')

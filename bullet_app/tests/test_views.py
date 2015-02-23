@@ -28,7 +28,7 @@ class HomePageTest(TestCase):
             '/bullets/new',
             data={'bullet_text': 'A negative bullet',
                   'bullet_sign': '-'
-                 }
+                  }
             )
         # follow the redirect
         self.assertContains(self.client.get(response.url),
@@ -81,6 +81,54 @@ class BulletsViewTest(TestCase):
         self.assertTemplateUsed(response, 'bullets.html')
         expected_error = escape("You can't have an empty bullet")
         self.assertContains(response, expected_error)
+
+    def test_bullet_parsing(self):
+        bg_ = BulletGroup.objects.create()
+        response = self.client.post(
+            '/bullets/%d/' % (bg_.id,),
+            data={'bullet_text': '+ positive bullet',
+                  'bullet_sign': '+'}
+            )
+        #self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            '/bullets/%d/' % (bg_.id,),
+            data={'bullet_text': '- negative bullet',
+                  'bullet_sign': '+'}
+            )
+        #self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            '/bullets/%d/' % (bg_.id,),
+            data={'bullet_text':
+                  '+ Third bullet - this should still be positive!',
+                  'bullet_sign': '+'}
+            )
+
+        # Get the bullets
+        bullets = Bullet.objects.filter(bullet_group=bg_)
+
+        # Test each one
+        self.assertEqual(bullets[0].text,
+                         'positive bullet'
+                         )
+        self.assertEqual(bullets[0].sign,
+                         '+')
+        # note that the parsed value should override the field that was
+        # submitted
+        self.assertEqual(bullets[1].text,
+                         'negative bullet'
+                         )
+        self.assertEqual(bullets[1].sign,
+                         '-'
+                         )
+        # The second hyphen is interpreted as
+        # a -
+        self.assertEqual(bullets[2].text,
+                         'Third bullet - this should still be positive!'
+                         )
+        self.assertEqual(bullets[2].sign,
+                         '+'
+                         )
+
 
 
 class NewBulletGroupTest(TestCase):
