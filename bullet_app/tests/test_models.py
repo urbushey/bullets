@@ -19,8 +19,8 @@ class BulletAndBulletGroupModelsTest(TestCase):
 
         second_bullet = Bullet()
         second_bullet.text = 'Second bullet'
-        first_bullet.positive_score = 0
-        first_bullet.negative_score = 1
+        second_bullet.positive_score = 0
+        second_bullet.negative_score = 1
         second_bullet.original_text = '- Second bullet'
         second_bullet.bullet_group = bullet_group_
         second_bullet.save()
@@ -38,7 +38,7 @@ class BulletAndBulletGroupModelsTest(TestCase):
         self.assertEqual(first_saved_bullet.positive_score,
                          1)
         self.assertEqual(first_saved_bullet.bullet_group, bullet_group_)
-        self.assertEqual(second_saved_bullet.negative_score,
+        self.assertEqual(first_saved_bullet.negative_score,
                          0)
         self.assertEqual(second_saved_bullet.text,
                          'Second bullet')
