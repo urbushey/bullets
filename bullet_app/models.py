@@ -14,13 +14,6 @@ class Bullet(models.Model):
 
     text = models.TextField(blank=False)
     bullet_group = models.ForeignKey(BulletGroup, default=None)
-    # Constants for sign option
-    POS = '+'
-    NEG = '-'
-    SIGN_CHOICES = (
-        (POS, '+'),
-        (NEG, '-'),
-    )
-    sign = models.CharField(max_length=1,
-                            choices=SIGN_CHOICES,
-                            default=POS)
+    original_text = models.TextField(null=True)
+    positive_score = models.SmallIntegerField(null=False, default=0)
+    negative_score = models.SmallIntegerField(null=False, default=0)

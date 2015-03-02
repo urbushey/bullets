@@ -12,13 +12,16 @@ class BulletAndBulletGroupModelsTest(TestCase):
 
         first_bullet = Bullet()
         first_bullet.text = 'The first (ever) bullet. Bang!'
-        first_bullet.sign = '+'
+        first_bullet.positive_score = 1
+        first_bullet.negative_score = 0
         first_bullet.bullet_group = bullet_group_
         first_bullet.save()
 
         second_bullet = Bullet()
         second_bullet.text = 'Second bullet'
-        second_bullet.sign = '-'
+        first_bullet.positive_score = 0
+        first_bullet.negative_score = 1
+        second_bullet.original_text = '- Second bullet'
         second_bullet.bullet_group = bullet_group_
         second_bullet.save()
 
@@ -32,13 +35,19 @@ class BulletAndBulletGroupModelsTest(TestCase):
         second_saved_bullet = saved_bullets[1]
         self.assertEqual(first_saved_bullet.text,
                          'The first (ever) bullet. Bang!')
-        self.assertEqual(first_saved_bullet.sign,
-                         '+')
+        self.assertEqual(first_saved_bullet.positive_score,
+                         1)
         self.assertEqual(first_saved_bullet.bullet_group, bullet_group_)
+        self.assertEqual(second_saved_bullet.negative_score,
+                         0)
         self.assertEqual(second_saved_bullet.text,
                          'Second bullet')
-        self.assertEqual(second_saved_bullet.sign,
-                         '-')
+        self.assertEqual(second_saved_bullet.positive_score,
+                         0)
+        self.assertEqual(second_saved_bullet.negative_score,
+                         1)
+        self.assertEqual(second_saved_bullet.original_text,
+                         "- Second bullet")
         self.assertEqual(second_saved_bullet.bullet_group, bullet_group_)
 
     def test_cannot_save_empty_bullets(self):
