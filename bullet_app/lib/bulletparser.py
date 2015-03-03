@@ -7,8 +7,8 @@ pattern = r"([\+\-\\\/\s])+"
 
 def parse(text):
     """ Returns a dictionary containing:
-        bullet_dict = {"positive": 1             # integer
-                       "negative": 3             # integer
+        bullet_dict = {"positive_score": 1             # integer
+                       "negative_score": 3             # integer
                        "parsed_text": "text"     # string
                        }
     """
@@ -21,15 +21,13 @@ def parse(text):
         # Strip + and - out of string and give them
         # scores based on occurrences in string.
         # Max a score can be is 5.
-        bullet_dict = {"positive":    min(signs.count("+"), 5),
-                       "negative":    min(signs.count("-"), 5),
-                       "parsed_text": text[len(signs):]
+        bullet_dict = {"positive_score": min(signs.count("+"), 5),
+                       "negative_score": min(signs.count("-"), 5),
+                       "parsed_text":    text[len(signs):]
                        }
 
     # Else add a single positive score
     else:
-        bullet_dict = {"positive":    1,
-                       "negative":    0,
-                       "parsed_text": text}
+        bullet_dict = {"parsed_text": text}
 
     return bullet_dict

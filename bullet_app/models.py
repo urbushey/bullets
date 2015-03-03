@@ -14,6 +14,6 @@ class Bullet(models.Model):
 
     text = models.TextField(blank=False)
     bullet_group = models.ForeignKey(BulletGroup, default=None)
-    original_text = models.TextField(null=True)
+    original_text = models.TextField(blank=True)
     positive_score = models.SmallIntegerField(null=False, default=0)
     negative_score = models.SmallIntegerField(null=False, default=0)
