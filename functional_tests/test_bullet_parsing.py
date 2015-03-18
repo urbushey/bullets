@@ -1,6 +1,7 @@
 from .base import FunctionalTest
+from unittest import skip
 
-
+@skip
 class BulletParsingTest(FunctionalTest):
 
     def test_sign_parsing(self):

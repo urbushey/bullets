@@ -19,17 +19,17 @@ class ItemValidationTest(FunctionalTest):
 
         #Milton tries again with some text.
         self.browser.find_element_by_id('id_new_bullet').send_keys('Today was good\n')
-        self.check_list_table_for_row('+ Today was good')
+        self.check_list_table_for_row('Today was good')
 
         # perversely, he now decides to submit a second blank list item
         self.browser.find_element_by_id('id_new_bullet').send_keys('\n')
-        self.check_list_table_for_row('+ Today was good')
+        self.check_list_table_for_row('Today was good')
         error = self.browser.find_element_by_css_selector('.has-error')
         self.assertEqual(error.text, "You can't have an empty bullet")
 
         # He corrects it by adding  a second bullet that is not blank
-        self.check_list_table_for_row('+ Today was good')
-        self.check_list_table_for_row('+ Today was good')
+        self.check_list_table_for_row('Today was good')
+        self.check_list_table_for_row('Today was good')
 
         # Milton can enter the bullet and press enter and it is saved
         # Milton can come back to the site and see his bullets
