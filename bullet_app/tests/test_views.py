@@ -7,6 +7,7 @@ from unittest import skip
 
 from bullet_app.views import home_page
 from bullet_app.models import Bullet, BulletGroup
+from bullet_app.forms import BulletForm
 
 # Create your tests here.
 
@@ -22,6 +23,14 @@ class HomePageTest(TestCase):
         response = home_page(request)
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
+
+    def test_home_page_renders_home_template(self):
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'home.html')
+
+    def test_home_page_uses_item_form(self):
+        response = self.client.get('/')
+        self.assertIsInstance(response.context['form'], BulletForm)
 
     def test_can_select_bullet_sign_and_save(self):
         response = self.client.post(
