@@ -1,13 +1,15 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 from bullet_app.models import Bullet, BulletGroup
+from bullet_app.forms import BulletForm
 from bullet_app.lib.bulletparser import parse
 # Create your views here.
 
 
 def home_page(request):
     return render(request,
-                  'home.html'
+                  'home.html',
+                  {'form': BulletForm()}
                   )
 
 
