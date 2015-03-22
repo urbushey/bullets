@@ -9,7 +9,7 @@ class ItemValidationTest(FunctionalTest):
         # Milton goes to the home page and accidentally tries to submit
         # an empty bullet.
         self.browser.get(self.server_url)
-        self.browser.find_element_by_id('id_new_bullet').send_keys('\n')
+        self.get_bullet_input_box().send_keys('\n')
 
 
         # The home page refreshes, and there is an error message saying that
@@ -18,11 +18,11 @@ class ItemValidationTest(FunctionalTest):
         self.assertEqual(error.text, "You can't have an empty bullet")
 
         #Milton tries again with some text.
-        self.browser.find_element_by_id('id_new_bullet').send_keys('Today was good\n')
+        self.get_bullet_input_box().send_keys('Today was good\n')
         self.check_list_table_for_row('Today was good')
 
         # perversely, he now decides to submit a second blank list item
-        self.browser.find_element_by_id('id_new_bullet').send_keys('\n')
+        self.get_bullet_input_box().send_keys('\n')
         self.check_list_table_for_row('Today was good')
         error = self.browser.find_element_by_css_selector('.has-error')
         self.assertEqual(error.text, "You can't have an empty bullet")

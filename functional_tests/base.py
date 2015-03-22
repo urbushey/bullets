@@ -35,3 +35,6 @@ class FunctionalTest(StaticLiveServerTestCase):
         table = self.browser.find_element_by_id('id_bullets_table')
         rows = table.find_elements_by_tag_name('tr')
         return rows
+
+    def get_bullet_input_box(self):
+        return self.browser.find_element_by_id('id_text')

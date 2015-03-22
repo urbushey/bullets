@@ -16,7 +16,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn('Bullets', header_text)
 
         # Milton wants to add the first bullet
-        inputbox = self.browser.find_element_by_id('id_new_bullet')
+        inputbox = self.get_bullet_input_box()
         self.assertEqual(inputbox.get_attribute('placeholder'),
                          '+ This week I...'
                          )
@@ -32,7 +32,7 @@ class NewVisitorTest(FunctionalTest):
 
         # Milton wants to give Bereket some credit too by entering a second
         # item.
-        inputbox = self.browser.find_element_by_id('id_new_bullet')
+        inputbox = self.get_bullet_input_box()
         inputbox.send_keys('Bereket committed some sick code too.')
         inputbox.send_keys(Keys.ENTER)
 
@@ -53,7 +53,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertNotIn('Bereket committed some sick code', page_text)
 
         # Bereket enters his own bullet
-        inputbox = self.browser.find_element_by_id('id_new_bullet')
+        inputbox = self.get_bullet_input_box()
         inputbox.send_keys('Had a bad day')
         inputbox.send_keys(Keys.ENTER)
 

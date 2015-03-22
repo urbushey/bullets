@@ -20,8 +20,8 @@ def view_bullets(request, bullet_group_id):
     if request.method == 'POST':
         try:
             # parse the text
-            bullet_dict = parse(request.POST['bullet_text'])
-            original_text = request.POST['bullet_text']
+            bullet_dict = parse(request.POST['text'])
+            original_text = request.POST['text']
             text = bullet_dict["parsed_text"]
             # Parsing bullet text overrides the post contents.
             if "positive_score" in bullet_dict:
@@ -50,7 +50,7 @@ def view_bullets(request, bullet_group_id):
 
 def new_bullet_group(request):
     bg_ = BulletGroup.objects.create()
-    bullet = Bullet.objects.create(text=request.POST['bullet_text'],
+    bullet = Bullet.objects.create(text=request.POST['text'],
                                    bullet_group=bg_)
     try:
         bullet.full_clean()

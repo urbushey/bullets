@@ -25,7 +25,7 @@ class HomePageTest(TestCase):
     def test_can_select_bullet_sign_and_save(self):
         response = self.client.post(
             '/bullets/new',
-            data={'bullet_text': 'A negative bullet',
+            data={'text': 'A negative bullet',
                   #'bullet_positive_score': 0,
                   #'bullet_negative_score': 1
                   }
@@ -78,7 +78,7 @@ class BulletsViewTest(TestCase):
         bg_ = BulletGroup.objects.create()
         response = self.client.post(
             '/bullets/%d/' % (bg_.id,),
-            data={'bullet_text': '',
+            data={'text': '',
                   'bullet_positive_score': 1}
             )
         self.assertEqual(response.status_code, 200)
@@ -90,19 +90,19 @@ class BulletsViewTest(TestCase):
         bg_ = BulletGroup.objects.create()
         response = self.client.post(
             '/bullets/%d/' % (bg_.id,),
-            data={'bullet_text': '+ positive bullet',
+            data={'text': '+ positive bullet',
                   'bullet_positive_score': 1}
             )
         self.assertEqual(response.status_code, 302)
         response = self.client.post(
             '/bullets/%d/' % (bg_.id,),
-            data={'bullet_text': '- negative bullet',
+            data={'text': '- negative bullet',
                   'bullet_positive_score': 1}
             )
         self.assertEqual(response.status_code, 302)
         response = self.client.post(
             '/bullets/%d/' % (bg_.id,),
-            data={'bullet_text':
+            data={'text':
                   '+ Third bullet - this should still be positive!',
                   'bullet_positive_score': 1}
             )
@@ -135,7 +135,7 @@ class NewBulletGroupTest(TestCase):
     def test_saving_a_POST_request(self):
         self.client.post(
             '/bullets/new',
-            data={'bullet_text': 'A new bullet',
+            data={'text': 'A new bullet',
                   'bullet_positive_score': 1}
             )
         self.assertEqual(Bullet.objects.count(), 1)
@@ -145,7 +145,7 @@ class NewBulletGroupTest(TestCase):
     def test_redirects_after_POST(self):
         response = self.client.post(
             '/bullets/new',
-            data={'bullet_text': 'A new bullet',
+            data={'text': 'A new bullet',
                   'bullet_positive_score': 1}
             )
         bullet_group = BulletGroup.objects.first()
@@ -158,7 +158,7 @@ class NewBulletGroupTest(TestCase):
 
         self.client.post(
             '/bullets/%d/' % (correct_bullet_group.id,),
-            data={'bullet_text': 'A new bullet for an existing bullet_group',
+            data={'text': 'A new bullet for an existing bullet_group',
                   'bullet_positive_score': 1}
             )
 
@@ -175,7 +175,7 @@ class NewBulletGroupTest(TestCase):
 
         response = self.client.post(
             '/bullets/%d/' % (correct_bullet_group.id,),
-            data={'bullet_text': 'A new bullet for an existing bullet_group',
+            data={'text': 'A new bullet for an existing bullet_group',
                   'bullet_positive_score': 1}
             )
 
@@ -194,7 +194,7 @@ class NewBulletGroupTest(TestCase):
     def test_validation_errors_are_sent_to_template(self):
 
         response = self.client.post('/bullets/new',
-                                    data={'bullet_text': '',
+                                    data={'text': '',
                                           'bullet_positive_score': 1})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
@@ -203,7 +203,7 @@ class NewBulletGroupTest(TestCase):
 
     def test_invalid_items_are_not_saved(self):
         self.client.post('bullets/new',
-                         data={'bullet_text': '',
+                         data={'text': '',
                                'bullet_positive_score': 1})
 
         self.assertEqual(BulletGroup.objects.count(), 0)
